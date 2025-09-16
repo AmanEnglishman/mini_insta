@@ -80,7 +80,6 @@ class Profile(models.Model):
         null=True,
         blank=True,
     )
-
     following = models.ManyToManyField(
         'self',
         symmetrical=False,

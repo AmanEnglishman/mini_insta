@@ -60,3 +60,24 @@ class UserProfileAPI(generics.RetrieveAPIView):
         username = self.kwargs['username']
         user = get_object_or_404(User, username=username)
         return user.profile
+
+
+class FollowToggleView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, username):
+        target_user = get_object_or_404(User, username=username)
+
+        if target_user == request.user:
+            return Response({'message': 'Нельзя подписываться на себя'}, status=status.HTTP_400_BAD_REQUEST)
+
+        target_profile = target_user.profile
+        current_profile = request.user.profile
+
+        if target_profile in current_profile.following.all():
+            current_profile.following.remove(target_profile)
+            return Response({'message': "Вы отписались"})
+        else:
+            current_profile.following.add(target_profile)
+            return Response({"message": "Вы подписались"})
+
