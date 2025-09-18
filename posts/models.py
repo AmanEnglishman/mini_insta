@@ -25,3 +25,11 @@ class Post(models.Model):
         related_name='liked_posts',
         blank=True,
     )
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Post'
+        verbose_name_plural = 'Posts'
+
+    def __str__(self):
+        return f'{self.author} - {self.created_at}'
